@@ -65,15 +65,19 @@ def img_process(img_path):
 	thresh = cv2.threshold(gray, 219, 255, cv2.THRESH_BINARY)[1]
 
 	# 在二值图片中寻找轮廓
-	cnts = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	cnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	# cnt = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-	cnts = imutils.grab_contours(cnts)
+	# cnts = imutils.grab_contours(cnts)
 
 	# 初始颜色标签
 	cl = ColorLabeler()
 
 	# 遍历每一个轮廓
-	for c in cnts: # TODO 找到包含关系
+	for c, h in zip(cnts, hierarchy[0]):  # TODO 找到包含关系
+		if (h == [-1, -1, 1, -1]).all():
+			# 最外层轮廓(整幅图)
+			continue
+
 		# 计算每一个轮廓的中心点
 		M = cv2.moments(c)
 		cX = int((M["m10"] / M["m00"]))
@@ -95,4 +99,4 @@ def img_process(img_path):
 
 
 if __name__ == '__main__':
-	img_process(r'C:\Work\Code\Opencv\1.png')
+	img_process(r'C:\Work\Code\Opencv\2.png')
