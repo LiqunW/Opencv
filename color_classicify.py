@@ -4,7 +4,6 @@ from scipy.spatial import distance as dist
 from collections import OrderedDict
 import numpy as np
 import cv2
-import imutils
 
 
 # 创建一个颜色标签类
@@ -71,12 +70,21 @@ def img_process(img_path):
 
 	# 初始颜色标签
 	cl = ColorLabeler()
-
+	# 包含关系的形状
+	include_ = []
 	# 遍历每一个轮廓
 	for c, h in zip(cnts, hierarchy[0]):  # TODO 找到包含关系
 		if (h == [-1, -1, 1, -1]).all():
 			# 最外层轮廓(整幅图)
 			continue
+		if h[2] != -1:
+			if include_ == []:
+				include_.append(h)
+				continue
+			else:
+				if h[2] != -1 and h[3] + 1 == include_[-1][2]:
+					include_.append(h)
+					continue
 
 		# 计算每一个轮廓的中心点
 		M = cv2.moments(c)
@@ -97,6 +105,6 @@ def img_process(img_path):
 		cv2.imshow("Image", image)
 		cv2.waitKey(0)
 
-
+	print(include_)
 if __name__ == '__main__':
-	img_process(r'C:\Work\Code\Opencv\2.png')
+	img_process(r'C:\Work\Code\Opencv\1.png')
