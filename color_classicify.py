@@ -65,7 +65,7 @@ def img_process(img_path):
 	thresh = cv2.threshold(gray, 219, 255, cv2.THRESH_BINARY)[1]
 
 	# 在二值图片中寻找轮廓
-	cnts = cv2.findContours(thresh.copy(), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+	cnts = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	# cnt = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = imutils.grab_contours(cnts)
 
